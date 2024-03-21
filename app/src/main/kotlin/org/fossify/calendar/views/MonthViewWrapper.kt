@@ -1,18 +1,15 @@
 package org.fossify.calendar.views
 
 import android.content.Context
-import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import org.fossify.calendar.activities.EventActivity
 import org.fossify.calendar.databinding.MonthViewBackgroundBinding
 import org.fossify.calendar.databinding.MonthViewBinding
 import org.fossify.calendar.extensions.config
-import org.fossify.calendar.extensions.getNewEventTimestampFromCode
+import org.fossify.calendar.extensions.launchNewEventOrTaskActivity
 import org.fossify.calendar.helpers.COLUMN_COUNT
 import org.fossify.calendar.helpers.Formatter
-import org.fossify.calendar.helpers.NEW_EVENT_START_TS
 import org.fossify.calendar.helpers.ROW_COUNT
 import org.fossify.calendar.models.DayMonthly
 import org.fossify.commons.extensions.onGlobalLayout
@@ -143,9 +140,7 @@ class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) : F
             }
 
             setOnLongClickListener{
-                val intent = Intent(context, EventActivity::class.java)
-                intent.putExtra(NEW_EVENT_START_TS, context.getNewEventTimestampFromCode(day.code))
-                context.startActivity(intent)
+                context.launchNewEventOrTaskActivity(day.code)
                 true
             }
 

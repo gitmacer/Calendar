@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import org.fossify.calendar.R
 import org.fossify.calendar.extensions.launchNewEventIntent
 import org.fossify.calendar.extensions.launchNewTaskIntent
+import org.fossify.calendar.helpers.DAY_CODE
+import org.fossify.calendar.helpers.Formatter
 import org.fossify.commons.dialogs.RadioGroupDialog
 import org.fossify.commons.models.RadioItem
 
@@ -19,11 +21,13 @@ class EventTypePickerActivity : AppCompatActivity() {
             RadioItem(TYPE_TASK, getString(R.string.task))
         )
         RadioGroupDialog(this, items = items, cancelCallback = { dialogCancelled() }) {
+            val dayCode = intent.getStringExtra(DAY_CODE) ?: Formatter.getTodayCode()
+
             val checkedId = it as Int
             if (checkedId == TYPE_EVENT) {
-                launchNewEventIntent()
+                launchNewEventIntent(dayCode)
             } else if (checkedId == TYPE_TASK) {
-                launchNewTaskIntent()
+                launchNewTaskIntent(dayCode)
             }
             finish()
         }

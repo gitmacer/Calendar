@@ -501,14 +501,15 @@ fun Context.launchNewTaskIntent(dayCode: String = Formatter.getTodayCode(), allo
     }
 }
 
-fun Context.launchNewEventOrTaskActivity() {
+fun Context.launchNewEventOrTaskActivity(dayCode: String = Formatter.getTodayCode()) {
     if (config.allowCreatingTasks) {
         Intent(this, EventTypePickerActivity::class.java).apply {
+            putExtra(DAY_CODE, dayCode)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(this)
         }
     } else {
-        launchNewEventIntent()
+        launchNewEventIntent(dayCode)
     }
 }
 
