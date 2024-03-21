@@ -1,18 +1,21 @@
 package org.fossify.calendar.views
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import android.content.Intent
+import org.fossify.calendar.activities.EventActivity
 import org.fossify.calendar.databinding.MonthViewBackgroundBinding
 import org.fossify.calendar.databinding.MonthViewBinding
 import org.fossify.calendar.extensions.config
-import org.fossify.calendar.helpers.*
 import org.fossify.calendar.extensions.getNewEventTimestampFromCode
+import org.fossify.calendar.helpers.COLUMN_COUNT
+import org.fossify.calendar.helpers.Formatter
+import org.fossify.calendar.helpers.NEW_EVENT_START_TS
+import org.fossify.calendar.helpers.ROW_COUNT
 import org.fossify.calendar.models.DayMonthly
 import org.fossify.commons.extensions.onGlobalLayout
-import org.fossify.calendar.activities.EventActivity
 
 // used in the Monthly view fragment, 1 view per screen
 class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) : FrameLayout(context, attrs, defStyle) {
