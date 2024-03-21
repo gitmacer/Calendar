@@ -4,14 +4,15 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.content.Intent
 import org.fossify.calendar.databinding.MonthViewBackgroundBinding
 import org.fossify.calendar.databinding.MonthViewBinding
 import org.fossify.calendar.extensions.config
-import org.fossify.calendar.helpers.COLUMN_COUNT
-import org.fossify.calendar.helpers.Formatter
-import org.fossify.calendar.helpers.ROW_COUNT
+import org.fossify.calendar.helpers.*
+import org.fossify.calendar.extensions.getNewEventTimestampFromCode
 import org.fossify.calendar.models.DayMonthly
 import org.fossify.commons.extensions.onGlobalLayout
+import org.fossify.calendar.activities.EventActivity
 
 // used in the Monthly view fragment, 1 view per screen
 class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) : FrameLayout(context, attrs, defStyle) {
@@ -136,6 +137,13 @@ class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) : F
                 if (isMonthDayView) {
                     binding.monthView.updateCurrentlySelectedDay(viewX, viewY)
                 }
+            }
+
+            setOnLongClickListener{
+                val intent = Intent(context, EventActivity::class.java)
+                intent.putExtra(NEW_EVENT_START_TS, context.getNewEventTimestampFromCode(day.code))
+                context.startActivity(intent)
+                true
             }
 
             addView(this)
