@@ -24,7 +24,6 @@ import androidx.core.app.NotificationCompat
 import androidx.print.PrintHelper
 import org.fossify.calendar.R
 import org.fossify.calendar.activities.EventActivity
-import org.fossify.calendar.activities.EventTypePickerActivity
 import org.fossify.calendar.activities.SnoozeReminderActivity
 import org.fossify.calendar.activities.TaskActivity
 import org.fossify.calendar.databases.EventsDatabase
@@ -40,8 +39,11 @@ import org.fossify.calendar.receivers.CalDAVSyncReceiver
 import org.fossify.calendar.receivers.NotificationReceiver
 import org.fossify.calendar.services.MarkCompletedService
 import org.fossify.calendar.services.SnoozeService
+import org.fossify.commons.compose.extensions.getActivity
+import org.fossify.commons.dialogs.RadioGroupDialog
 import org.fossify.commons.extensions.*
 import org.fossify.commons.helpers.*
+import org.fossify.commons.models.RadioItem
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.LocalDate
@@ -503,10 +505,18 @@ fun Context.launchNewTaskIntent(dayCode: String = Formatter.getTodayCode(), allo
 
 fun Context.launchNewEventOrTaskActivity(dayCode: String = Formatter.getTodayCode()) {
     if (config.allowCreatingTasks) {
-        Intent(this, EventTypePickerActivity::class.java).apply {
-            putExtra(DAY_CODE, dayCode)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(this)
+        val items = arrayListOf(
+            RadioItem(TYPE_EVENT, getString(R.string.event)),
+            RadioItem(TYPE_TASK, getString(R.string.task))
+        )
+
+        RadioGroupDialog(getActivity(), items) {
+            if (it == TYPE_EVENT){
+                launchNewEventIntent(dayCode)
+            }
+            else{
+                launchNewTaskIntent(dayCode)
+            }
         }
     } else {
         launchNewEventIntent(dayCode)
