@@ -1,8 +1,14 @@
 package org.fossify.calendar.views
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.ViewConfiguration.getLongPressTimeout
 import android.widget.FrameLayout
 import org.fossify.calendar.databinding.MonthViewBackgroundBinding
 import org.fossify.calendar.databinding.MonthViewBinding
@@ -122,6 +128,7 @@ class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) : F
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun addViewBackground(viewX: Int, viewY: Int, day: DayMonthly) {
 
         MonthViewBackgroundBinding.inflate(inflater, this, false).root.apply {
@@ -140,8 +147,25 @@ class MonthViewWrapper(context: Context, attrs: AttributeSet, defStyle: Int) : F
             }
 
             setOnLongClickListener{
-                context.launchNewEventOrTaskActivity(day.code)
+                val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                if (Build.VERSION.SDK_INT >= 26) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+                } else {
+                    vibrator.vibrate(100)
+                }
                 true
+            }
+
+            setOnTouchListener{ v, event, ->
+                if (event.actionMasked == MotionEvent.ACTION_UP) {
+                    val touchDuration = event.eventTime - event.downTime
+                    val longPressDuration = getLongPressTimeout().toLong()
+
+                    if (touchDuration >= longPressDuration) {
+                        context.launchNewEventOrTaskActivity(day.code)
+                    }
+                }
+                false
             }
 
             addView(this)
